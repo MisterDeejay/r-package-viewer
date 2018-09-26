@@ -1,0 +1,32 @@
+<h1>R Packages</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Package</th>
+      <th>Version</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Authors</th>
+      <th>Maintainers</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @packages.each do |package| %>
+      <tr>
+        <td><%= package.package_name %></td>
+        <td><%= package.version %></td>
+        <td><%= package.title %></td>
+        <td><%= package.description %></td>
+        <% package.authors.each do |a| %>
+          <td><%= "#{a.name} #{a.email}" %></td>
+        <% end %>
+        <% package.maintainers.each do |m| %>
+          <td><%= "#{m.name} #{m.email}" %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
