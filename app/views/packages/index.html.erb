@@ -7,6 +7,7 @@
       <th>Version</th>
       <th>Title</th>
       <th>Description</th>
+      <th>Published At</th>
       <th>Authors</th>
       <th>Maintainers</th>
       <th colspan="3"></th>
@@ -19,6 +20,7 @@
         <td><%= package.package_name %></td>
         <td><%= package.version %></td>
         <td><%= package.title %></td>
+        <td><%= package.published_at %></td>
         <td><%= package.description %></td>
         <% package.authors.each do |a| %>
           <td><%= "#{a.name} #{a.email}" %></td>
