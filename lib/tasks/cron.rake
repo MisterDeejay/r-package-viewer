@@ -116,8 +116,7 @@ namespace :cron do
   def parse_maintainer_string(str)
     maintainer = {
       name: str.match(/[[:upper:]][[:alpha:]]+ [[:upper:]][[:alpha:]]+/)[0],
-      email: str.match(/[[:alpha:]]+@[[:alpha:]]+.[[:alpha:]]+/)[0]
-    }
+      email: str.match(/[[:alnum:]]+@[[:alnum:]]+.[[:alpha:]]+/)[0]    }
   end
 
   def get_package_filenames(links, n=50)
