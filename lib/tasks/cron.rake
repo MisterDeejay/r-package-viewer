@@ -51,27 +51,6 @@ namespace :cron do
     p
   end
 
-  def reformat_date(date)
-    new_date = [ nil ]
-    dates_arr = date.split('-')
-    dates_arr.each do |part|
-      if part.length == 4
-        new_date[0] = part
-      else
-        new_date << part
-      end
-    end
-
-    swap(new_date, 1, 2)
-  end
-
-  def swap(arr, i, i2)
-    temp = arr[i]
-    arr[i] = arr[i2]
-    arr[i2] = temp
-    arr
-  end
-
   def create_or_update_packages(packages_params, n=50)
     packages = []
     i = 0
@@ -117,27 +96,7 @@ namespace :cron do
   # Assumes authors_string is in the format:
   # fname lname, fname lname and fname lname
   def parse_authors_string(authors_string)
-    authors = []
-    name_so_far = ''
-    inside_brackets = false
-    (0...authors_string.length).each do |i|
-      if authors_string[i] == '[' || authors_string[i] == ']' || authors_string[i] == ',' || name_so_far[-3..-1] == 'and'
-        inside_brackets = true if authors_string[i] == '['
-        inside_brackets = false if authors_string[i] == ']'
-        if authors_string[i] == ',' || name_so_far[-3..-1] == 'and'
-          if name_so_far[-3..-1] == 'and'
-            authors << name_so_far[0..-4].strip
-          else
-            authors << name_so_far.strip
-          end
-          name_so_far = ''
-        end
-      else
-        name_so_far << authors_string[i] unless inside_brackets
-      end
-    end
-
-    authors << name_so_far.strip
+    authors_string.scan(/[[:upper:]][[:alpha:]]+ [[:upper:]][[:alpha:]]+/)
   end
 
   def create_or_update_maintainers(maintainer_string, package)
@@ -155,22 +114,10 @@ namespace :cron do
   # Assumes maintainer_string is in the format:
   # fname lname <email@domain.com>
   def parse_maintainer_string(str)
-    maintainer = { name: nil, email: nil }
-    inside_email = true
-    name_so_far = ''
-    (0...str.length).each do |i|
-      if str[i] == '<'
-        maintainer[:name] = name_so_far.strip
-        inside_email = true
-        name_so_far = ''
-      elsif str[i] == '>'
-        maintainer[:email] = name_so_far.strip
-      else
-        name_so_far << str[i]
-      end
-    end
-
-    maintainer
+    maintainer = {
+      name: str.match(/[[:upper:]][[:alpha:]]+ [[:upper:]][[:alpha:]]+/)[0],
+      email: str.match(/[[:alpha:]]+@[[:alpha:]]+.[[:alpha:]]+/)[0]
+    }
   end
 
   def get_package_filenames(links, n=50)
